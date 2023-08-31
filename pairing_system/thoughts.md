@@ -127,16 +127,16 @@ $$\mathscr{F}(S, T)=\sum_{i=0}^n \sum_{j=0}^m f(S_i, T_j)$$
 Doing it this way also makes the Python implementation easier
 
 ```
-def compute_compatability(..., S_i, T_j, ...):
+def compute_compatibility(S_i: Student, T_j: Tutor) -> float:
     # code to execute f(S_i, T_j)
-    return compatability_score
+    return compatibility_score
 
-def total_compatability(..., students, tutors, ...):
+def total_compatibility(students: list[Student], tutors: list[Tutor]) -> list[list[float]]:
     total = []
     for i in range(len(students)):
         S_i = []
         for j in range(len(tutors)):
-            S_i.append(compute_compatability(students[i], tutors[j])
+            S_i.append(compute_compatibility(students[i], tutors[j]))
         total.append(S_i)
     return total
 
