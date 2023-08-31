@@ -110,57 +110,62 @@ And written in its complete form:
 
 $$f(S_n, T_m)=[S_n \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot \bigg([T_m^1 = 0] + \frac{1}{1+e^{T_m^1-T_m^2+2}} + \frac{1}{2+2e^{-2.5(T_m^3-3)})} \bigg)$$
 
-### Matrix representation
-
-To improve efficiency, we can pass all tutors in as a vector, and return a vector encoding each tutors compatability.
-
-$$
-T=
-\begin{bmatrix}
-    T_{0} \\    
-    T_{1} \\    
-    \vdots \\
-    T_{m}
-\end{bmatrix}
-\xrightarrow{F(S_n, T)}
-\begin{bmatrix}
-    F(S_n, T_0) \\
-    F(S_n, T_1) \\
-    \vdots \\
-    F(S_n, T_m)
-\end{bmatrix}
-$$
-
-The most compatible tutor is then the one who has the greatest score in $F(S_n, T)$. Also note we are now using $F$ over $f$ to denote the function that returns a vector given a particular student. 
+### Discrete convolution
 
 There should be support for evaluation of multiple students. This causes a challenge since there would be clear favorability to the student evaluated first. To combat this, we can evaluate every student against every tutor before employing some method to allow for comprimises between pairings if multiple students rank the same tutor highest. 
 
-We can define a vector containing all students to be evaluated as well:
+We can address this by wrapping the whole process into a double summation. 
 
-$$
-S=
-\begin{bmatrix}
-    S_0 & S_1 & \cdots & S_n 
-\end{bmatrix}
-$$
+Let $S$ and $T$ be the set of all students and tutors respectively. 
 
-We can finally define our function $\mathscr{F}$ mapping every student $S_n \in S$ and every tutor $T_m \in T$ to a score. The final result will be an $n \cdot m$ matrix.
+$$S=(S_0, S_1, \ldots, S_n)$$
 
-$$
-\mathscr{F}(S, T) = \begin{bmatrix} 
-    F(S_0, T) & F(S_1, T) & \cdots & F(S_n, T) 
-\end{bmatrix}
-$$
+$$T=(T_0, T_1, \ldots, T_m)$$
 
-Expanded all out:
+We can define our final function $\mathscr{F}$:
 
-$$
-\mathscr{F}(S, T) = \begin{bmatrix} 
-    F(S_0, T_0) & F(S_1, T_0) & \cdots & F(S_n, T_0) \\
-    F(S_0, T_1) & F(S_1, T_1) & \cdots & F(S_n, T_1) \\
-    \vdots & \vdots & \ddots & \vdots \\
-    F(S_0, T_m) & F(S_1, T_m) & \cdots & F(S_n, T_m) 
-\end{bmatrix}
-$$
+$$\mathscr{F}(S, T)=\sum_{i=0}^n \sum_{j=0}^m f(S_i, T_j)$$
+
+Doing it this way also makes the Python implementation easier
+
+```
+def compute_compatability(..., S_i, T_j, ...):
+    # code to execute f(S_i, T_j)
+    return compatability_score
+
+def total_compatability(..., students, tutors, ...):
+    total = []
+    for i in range(len(students)):
+        S_i = []
+        for j in range(len(tutors)):
+            S_i.append(compute_compatability(students[i], tutors[j])
+        total.append(S_i)
+    return total
+
+'''
+SAMPLE OUTPUT
+
+total: [S_0, S_1, ..., S_n]
+
+[
+    [compute_compatability(students[0], tutors[0]),
+     compute_compatability(students[0], tutors[1]),
+     ...,
+     compute_compatability(students[0], tutors[m]],
+
+    [compute_compatability(students[1], tutors[0]),
+     compute_compatability(students[1], tutors[1]),
+     ...,
+     compute_compatability(students[1], tutors[m]],
+
+    ... ,
+
+    [compute_compatability(students[n], tutors[0]),
+     compute_compatability(students[n], tutors[1]),
+     ...,
+     compute_compatability(students[n], tutors[m]]
+]
+'''
+```
 
 
