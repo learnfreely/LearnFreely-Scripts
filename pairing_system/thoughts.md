@@ -5,8 +5,8 @@
 We first need a way to encode each course as a unique variable.
 - we can use the first letter followed first number to denote level.
 - To account for AP/IB, add an extra letter denoting the class type (A, I, or N for none)
-- Chemistry 3200 -> CN3
-- IB English 4238 -> EI4
+- Chemistry 3200 $\rightarrow$ CN3
+- IB English 4238 $\rightarrow$ EI4
 
 ## Parameters
 
