@@ -1,9 +1,166 @@
 # Pairing Algorithm
 
-GOAL: Create a function, that given a student, returns "compatability" scores over all tutors.
+## GOAL: Create a function, that given a student, returns "compatability" scores over all tutors.
+
+### Course code
 
 We first need a way to encode each course as a unique variable.
 - we can use the first letter followed first number to denote level.
 - To account for AP/IB, add an extra letter denoting the class type (A, I, or N for none)
 - Chemistry 3200 -> CN3
 - IB English 4238 -> EI4
+
+### Parameters
+
+- Subjects
+  - Can leave out exeptions to simplify for now, assign score to each tutor so someone can easily choose the next highest score
+- number of students
+  - first priority to those with no student
+  - next priority goes to tutor who wants the most students
+- GPA
+  - gets lower priority than the others, but still should have some amount of influence
+ 
+### Representing each party
+
+We would like to model the compatability of some tutor $T$ given a student $S$.
+
+Let $S$ be the course code the student has chosen. For example:
+
+$$S=\text{MN3}$$
+
+Then $T$ can be a 4-tuple with the following elements
+
+$$T=(\text{subjects, current-students, students-wanted, GPA})$$
+
+We can reference an element of $T$ via superscript notation:
+
+$$T^0=\text{subjects}$$
+
+$$T^1=\text{current-students}$$
+
+$$...$$
+
+We can compute wether a tutor has any students, as well as the remaining slots they have using the number of students they currently have as well as how many they would like. 
+
+In Python:
+
+```
+class Student:
+    def __init__(self, subject: str):
+        self.subject = subject
+
+class Tutor:
+    def __init__(self, subjects: List[str], current_students: int, students_wanted: int, GPA: float):
+        self.subjects = subjects
+        self.current_students = current_students
+        self.students_wanted = students_wanted
+        self.GPA = GPA
+
+    def has_student(self):
+        # easier to work with integers than boolean values
+        return 0 if self.current_students == 0 else 1
+
+    def remaining_spots(self):
+        return (self.students_wanted - self.current_students)
+```
+
+### Creating the algorithm
+
+We can now craeted a normalized weighted score for each tutor based on the compatability parameters. We can begin building a function $f$ to fulfil this task. $f$ will evolve as we add more and more functionality. 
+
+Starting off, if the students subject is not an element of the list of subjects from the tutor, or if the tutor can no longer take students, we can automatically return 0. For this, we can use an indicator function [.]. 
+
+$$f(S_n, T_m)=[S_n \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot (\text{other parameters})$$
+
+From there, first priority goes to the tutor with no students. That is, `if self.has_student() == 0`, that tutor gets increased priority.
+
+In order to ensure that those without students are put first, we can do the same thing as the subject and create an indicator function. That being said, we'll put a little less priority on this parameter than the subjects by allowing some non-zero score to be given if the function evaluates to 0. 
+
+$$f(S_n, T_m)=[S_n \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot \big([T_m^1 = 0] + \text{other parameters}\big)$$
+
+Then, next priority is put on the tutor requesting the most students, regardless of how many they currently have. For example, a tutor with 3 students but requesting 6 will have higher priority than a tutor with 1 but requesting 2. 
+
+This should return a value between 0 and 1, so we can use a scaled logistic function. 
+
+$$\large g(x)=\frac{L}{1+e^{-k(x-x_0)}}$$
+
+These are hyperparameters to mess with later, but letting $k=1$, $x_0=2$, and $L=1$ results in a mapping where $g(1) < g(2) < g(3) < ...$, but to avoid exploding values, $g(x)$ is upper bounded at $g(x) < 1$.
+
+Putting it all together, we can finish the definition of $g$ as such:
+
+$$g(T_m)=\frac{1}{1+e^{-({T_m^2-T_m^1-2})}}$$
+
+Which we can now incude in $f$:
+
+$$f(S_n, T_m)= I(S_n, T_m) \cdot \big([T_m^1 = 0] + g(T_m) + \text{other parameters}\big)$$
+
+Where $I$ is the indicator coefficients.
+
+Our final parameter is GPA, which will be given a lower weight. For now, we will have GPA influence the result by taking a value between 0 and 0.5.
+
+Once again using a scaled logistic curve $j(x)$, we can set $k=2.5$, $x_0=3$, and $L=0.5$. This results in a curve upper bounded at $j(x) < 0.5$, centered at 3, and much steeper than $g(x)$ which had $k=1$. 
+
+$$j(T_m)=\frac{1}{2(1+e^{-2.5(T_m^3-3)})}$$
+
+Adding to $f$:
+
+$$f(S_n, T_m)= I(S_n, T_m) \cdot \big([T_m^1 = 0] + g(T_m) + j(T_m)\big)$$
+
+And written in its complete form:
+
+$$f(S_n, T_m)=[S_n \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot \bigg([T_m^1 = 0] + \frac{1}{1+e^{T_m^1-T_m^2+2}} + \frac{1}{2+2e^{-2.5(T_m^3-3)})} \bigg)$$
+
+### Matrix representation
+
+To improve efficiency, we can pass all tutors in as a vector, and return a vector encoding each tutors compatability.
+
+$$
+T=
+\begin{bmatrix}
+    T_{0} \\    
+    T_{1} \\    
+    \vdots \\
+    T_{m}
+\end{bmatrix}
+\xrightarrow{F(S_n, T)}
+\begin{bmatrix}
+    F(S_n, T_0) \\
+    F(S_n, T_1) \\
+    \vdots \\
+    F(S_n, T_m)
+\end{bmatrix}
+$$
+
+The most compatible tutor is then the one who has the greatest score in $F(S_n, T)$. Also note we are now using $F$ over $f$ to denote the function that returns a vector given a particular student. 
+
+There should be support for evaluation of multiple students. This causes a challenge since there would be clear favorability to the student evaluated first. To combat this, we can evaluate every student against every tutor before employing some method to allow for comprimises between pairings if multiple students rank the same tutor highest. 
+
+We can define a vector containing all students to be evaluated as well:
+
+$$
+S=
+\begin{bmatrix}
+    S_0 & S_1 & \cdots & S_n 
+\end{bmatrix}
+$$
+
+We can finally define our function $\mathscr{F}$ mapping every student $S_n \in S$ and every tutor $T_m \in T$ to a score. The final result will be an $n \cdot m$ matrix.
+
+$$
+\mathscr{F}(S, T) = \begin{bmatrix} 
+    F(S_0, T) & F(S_1, T) & \cdots & F(S_n, T) 
+\end{bmatrix}
+$$
+
+Expanded all out:
+
+$$
+\mathscr{F}(S, T) = \begin{bmatrix} 
+    F(S_0, T_0) & F(S_1, T_0) & \cdots & F(S_n, T_0) \\
+    F(S_0, T_1) & F(S_1, T_1) & \cdots & F(S_n, T_1) \\
+    \vdots & \vdots & \ddots & \vdots \\
+    F(S_0, T_m) & F(S_1, T_m) & \cdots & F(S_n, T_m) 
+\end{bmatrix}
+$$
+
+
