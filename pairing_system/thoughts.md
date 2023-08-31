@@ -82,7 +82,7 @@ This should return a value between 0 and 1, so we can use a scaled logistic func
 
 $$\large g(x)=\frac{L}{1+e^{-k(x-x_0)}}$$
 
-These are hyperparameters to mess with later, but letting $k=1$, $x_0=2$, and $L=1$ results in a mapping where $g(1) < g(2) < g(3) < ...$, but to avoid exploding values, $g(x)$ is upper bounded at $g(x) < 1$.
+These are hyperparameters to mess with later, but letting $k=1$, $x_0=2$, and $L=1$ results in a mapping where $g(n) < g(n+1)$ for all $n$, but bounded by $0 < g(x) < L$. $k$ represents the "steepness" of the curve, but we'll leave it at 1 for now, and $x_0$ is the center point such that $g(x_0)=L/2$
 
 Putting it all together, we can finish the definition of $g$ as such:
 
