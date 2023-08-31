@@ -112,7 +112,7 @@ $$f(S_n, T_m)=[S_n \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot \bigg([T_m^1 = 0]
 
 There should be support for evaluation of multiple students. This causes a challenge since there would be clear favorability to the student evaluated first. To combat this, we can evaluate every student against every tutor before employing some method to allow for compromises between pairings if multiple students rank the same tutor highest. 
 
-We can address this by wrapping the whole process into a double summation. 
+We can address this by wrapping the whole process into a binary relation $\mathrel{\hat{\mathrel{\mathcal R}}}$. 
 
 Let $S$ and $T$ be the set of all students and tutors respectively. 
 
@@ -122,7 +122,9 @@ $$T=(T_0, T_1, \ldots, T_m)$$
 
 We can define our final function $\mathscr{F}$:
 
-$$\mathscr{F}(S, T)=\sum_{i=0}^n \sum_{j=0}^m f(S_i, T_j)$$
+$$\mathscr{F}(S, T)=f(S \mathrel{\hat{\mathrel{\mathcal R}}} T)$$
+
+Where $f$ acts on every element of $S \mathrel{\hat{\mathrel{\mathcal R}}} T$.
 
 Doing it this way also makes the Python implementation easier
 
