@@ -92,7 +92,7 @@ Which we can now incude in $f$:
 
 $$f(S_n, T_m)= I(S_n, T_m) \cdot \big([T_m^1 = 0] + g(T_m) + \text{other parameters}\big)$$
 
-Where $I$ is the indicator coefficients.
+Where $I$ represents the indicator coefficients.
 
 Our final parameter is GPA, which will be given a lower weight. For now, we will have GPA influence the result by taking a value between 0 and 0.5.
 
