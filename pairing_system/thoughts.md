@@ -110,9 +110,9 @@ And written in its complete form:
 
 $$f(S_n, T_m)=[S_n \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot \bigg([T_m^1 = 0] + \frac{1}{1+e^{T_m^1-T_m^2+2}} + \frac{1}{2+2e^{-2.5(T_m^3-3)})} \bigg)$$
 
-### Discrete convolution
+### Evaluating all students and all tutors
 
-There should be support for evaluation of multiple students. This causes a challenge since there would be clear favorability to the student evaluated first. To combat this, we can evaluate every student against every tutor before employing some method to allow for comprimises between pairings if multiple students rank the same tutor highest. 
+There should be support for evaluation of multiple students. This causes a challenge since there would be clear favorability to the student evaluated first. To combat this, we can evaluate every student against every tutor before employing some method to allow for compromises between pairings if multiple students rank the same tutor highest. 
 
 We can address this by wrapping the whole process into a double summation. 
 
@@ -168,4 +168,8 @@ total: [S_0, S_1, ..., S_n]
 '''
 ```
 
+We now have an array containing the compatability score for each student $S_i$ over all tutors. 
 
+If multiple students have the same tutor as their highest score, those scores must be equal by definition of $\mathscr{F}$ as there is no dependence on any other student attributes besides subject.
+
+$$\text{IN PROGRESS...}$$
