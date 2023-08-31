@@ -1,8 +1,6 @@
 # Pairing Algorithm
 
-## GOAL: Create a function, that given a student, returns "compatability" scores over all tutors.
-
-### Course code
+## Encoding courses
 
 We first need a way to encode each course as a unique variable.
 - we can use the first letter followed first number to denote level.
@@ -10,7 +8,7 @@ We first need a way to encode each course as a unique variable.
 - Chemistry 3200 -> CN3
 - IB English 4238 -> EI4
 
-### Parameters
+## Parameters
 
 - Subjects
   - Can leave out exeptions to simplify for now, assign score to each tutor so someone can easily choose the next highest score
@@ -20,7 +18,7 @@ We first need a way to encode each course as a unique variable.
 - GPA
   - gets lower priority than the others, but still should have some amount of influence
  
-### Representing each party
+## Representing each party
 
 We would like to model the compatability of some tutor $T$ given a student $S$.
 
@@ -64,7 +62,7 @@ class Tutor:
         return (self.students_wanted - self.current_students)
 ```
 
-### Creating the algorithm
+## Creating the algorithm
 
 We can now craeted a normalized weighted score for each tutor based on the compatability parameters. We can begin building a function $f$ to fulfil this task. $f$ will evolve as we add more and more functionality. 
 
@@ -110,7 +108,7 @@ And written in its complete form:
 
 $$f(S_n, T_m)=[S_n \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot \bigg([T_m^1 = 0] + \frac{1}{1+e^{T_m^1-T_m^2+2}} + \frac{1}{2+2e^{-2.5(T_m^3-3)})} \bigg)$$
 
-### Evaluating all students and all tutors
+## Evaluating all students and all tutors
 
 There should be support for evaluation of multiple students. This causes a challenge since there would be clear favorability to the student evaluated first. To combat this, we can evaluate every student against every tutor before employing some method to allow for compromises between pairings if multiple students rank the same tutor highest. 
 
