@@ -72,7 +72,7 @@ $$f(S_n, T_m)=[S_n \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot (\text{other para
 
 From there, first priority goes to the tutor with no students. That is, `if self.has_student() == 0`, that tutor gets increased priority.
 
-In order to ensure that those without students are put first, we can do the same thing as the subject and create an indicator function. That being said, we'll put a little less priority on this parameter than the subjects by allowing some non-zero score to be given if the function evaluates to 0. 
+In order to ensure that those without students are put first, we can do the same thing as the subject and create an indicator function. That being said, we'll give it a little leniency by allowing some non-zero score to be given if the function evaluates to 0. 
 
 $$f(S_n, T_m)=[S_n \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot \big([T_m^1 = 0] + \text{other parameters}\big)$$
 
