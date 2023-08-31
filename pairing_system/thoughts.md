@@ -66,7 +66,7 @@ class Tutor:
 
 We can now craeted a normalized weighted score for each tutor based on the compatability parameters. We can begin building a function $f$ to fulfil this task. $f$ will evolve as we add more and more functionality. 
 
-Starting off, if the students subject is not an element of the list of subjects from the tutor, or if the tutor can no longer take students, we can automatically return 0. For this, we can use an indicator function [.]. 
+Starting off, if the students subject is not an element of the list of subjects from the tutor, or if the tutor can no longer take students, we can automatically return 0. For this, we can use the indicator function which we will denote with square brackets: [ . ]
 
 $$f(S_n, T_m)=[S_n \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot (\text{other parameters})$$
 
