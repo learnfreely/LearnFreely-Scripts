@@ -72,11 +72,11 @@ $$f(S_n, T_m)=[S_n \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot (\text{other para
 
 From there, first priority goes to the tutor with no students. That is, `if self.has_student() == 0`, that tutor gets increased priority.
 
-In order to ensure that those without students are put first, we can do the same thing as the subject and create an indicator function. That being said, we'll give it a little leniency by allowing some non-zero score to be given if the function evaluates to 0. 
+In order to ensure that those without students are put first, we can do the same thing as the subject and create an indicator function. That being said, we'll give it a little leniency by allowing some non-zero score to be given even if the function evaluates to 0. 
 
 $$f(S_n, T_m)=[S_n \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot \big([T_m^1 = 0] + \text{other parameters}\big)$$
 
-Then, next priority is put on the tutor requesting the most students, regardless of how many they currently have. For example, a tutor with 3 students but requesting 6 will have higher priority than a tutor with 1 but requesting 2. 
+Next priority is put on the tutor requesting the most students, regardless of how many they currently have. For example, a tutor with 3 students but requesting 6 will have higher priority than a tutor with 1 but requesting 2. 
 
 This should return a value between 0 and 1, so we can use a scaled logistic function. 
 
@@ -173,3 +173,7 @@ We now have an array containing the compatability score for each student $S_i$ o
 If multiple students have the same tutor as their highest score, those scores must be equal by definition of $\mathscr{F}$ as there is no dependence on any other student attributes besides subject.
 
 $$\text{IN PROGRESS...}$$
+
+Possibility: replace GPA param as such
+
+$$[tutor GPA > student GPA] \cdot (some function(tutor GPA - student GPA))$$
