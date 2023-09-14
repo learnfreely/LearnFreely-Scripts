@@ -180,7 +180,7 @@ $$S={subject, GPA}$$
 
 Add param to $f$:
 
-$$f(S_n, T_m)=[S_n^0 \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot \bigg([T_m^1 = 0] + [S_n^1 < T_m^3] \cdot (\frac{1}{1+e^{T_m^3 - S_n^1}}) + \frac{1}{1+e^{T_m^1-T_m^2+2}} + \frac{1}{2+2e^{-2.5(T_m^3-3)})} \bigg)$$ 
+$$f(S_n, T_m)=[S_n^0 \in T_m^0] \cdot [T_m^2-T_m^1 \neq 0] \cdot \bigg([T_m^1 = 0] + \frac{[S_n^1 < T_m^3]}{1+e^{T_m^3 - S_n^1}} + \frac{1}{1+e^{T_m^1-T_m^2+2}} + \frac{1}{2+2e^{-2.5(T_m^3-3)})} \bigg)$$ 
 
 
 
